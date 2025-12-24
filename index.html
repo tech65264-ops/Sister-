@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kachhan Katsuki</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #87cefa; /* sky blue */
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Canvas full-screen black Matrix rain behind */
+    #matrixCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #000; /* black */
+      z-index: 0;
+    }
+
+    /* Sky-blue glass card on top */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(135, 206, 250, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 22px;
+      padding: 26px 32px;
+      max-width: 360px;
+      text-align: center;
+      backdrop-filter: blur(14px);
+      box-shadow:
+        0 0 25px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(135, 206, 250, 0.6);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .title {
+      font-size: 1.9rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      text-shadow: 0 0 16px rgba(255, 255, 255, 0.9);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    .age {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffeaa7;
+      margin-bottom: 18px;
+    }
+
+    .note {
+      font-size: 0.95rem;
+      color: #d1ecff;
+      line-height: 1.5;
+      border-top: 1px solid rgba(255, 255, 255, 0.25);
+      padding-top: 12px;
+      margin-top: 6px;
+    }
+
+    .heart {
+      color: #00e5ff;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.9);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Black Matrix rain -->
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- Sky blue info card -->
+  <div class="card">
+    <div class="title">Kachhan Katsuki</div>
+    <div class="subtitle">Future legend of the Matrix world</div>
+    <div class="age">Age: 13</div>
+    <div class="note">
+      Made by <strong>Shamil</strong><br />
+      for his favourite sister <span class="heart">💙</span>
+    </div>
+  </div>
+
+  <script>
+    // Matrix rain effect (black background, light characters on top)
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const letters = "アァカサタナハマヤラワガザダバパイィキシチニヒミリギジヂビピ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 18;
+    let columns = Math.floor(window.innerWidth / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function draw() {
+      // Transparent black for trailing effect
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Sky-blue / cyan glowing text
+      ctx.fillStyle = "#87cefa";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
